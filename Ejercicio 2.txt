@@ -4,16 +4,12 @@
     $match: {
       fechaOrden: {
         $gte: new Date(
-          new Date(
-            "2021-12-17T03:24:00"
-          ).setMonth(
-            new Date(
-              "2021-12-17T03:24:00"
-            ).getMonth() - 3
+          new Date().setMonth(
+            new Date().getMonth() - 3 // restamos 3 meses
           )
         ),
 
-        $lte: new Date("2021-12-17T03:24:00"), // fecha actual
+        $lte: new Date(), // fecha actual
       },
     },
   },
