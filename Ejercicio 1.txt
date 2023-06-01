@@ -1,0 +1,51 @@
+// Ejercicio 1
+[
+  {
+    $match: {
+      fechaOrden: {
+        $gte: new Date(
+          new Date().setFullYear(
+            new Date().getFullYear() - 2 // fecha actual - 2 años
+          )
+        ),
+
+        $lte: new Date(), // fecha actual
+      },
+    },
+  },
+  {
+    $group: {
+      _id: {
+        Month: {
+          $month: "$fechaOrden",
+        },
+        Year: {
+          $year: "$fechaOrden",
+        },
+      },
+      // Agrupamos las que tienen mismo mes y año
+      TotalMensual: {
+        $sum: "$totalFactura",
+      }, // Sumamos el total de esas facturas y la guardamos en TotalMensual
+    },
+  },
+  {
+    $project: {
+      _id: 0,
+      // Ocultamos el ID
+      Month: "$_id.Month",
+      // Mostramos el mes
+      Year: "$_id.Year",
+      // Mostramos el ID
+      TotalMensual: 1, // Mostramos el Total
+    },
+  },
+   {
+    $sort: {
+      TotalMensual: -1, // Ordenamos de mayor a menor el total
+    },
+  },
+  {
+    $limit: 3, // limitamos a 3
+  },
+]

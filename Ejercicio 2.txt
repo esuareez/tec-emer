@@ -1,0 +1,58 @@
+// Ejercicio 2
+[
+  {
+    $match: {
+      fechaOrden: {
+        $gte: new Date(
+          new Date(
+            "2021-12-17T03:24:00"
+          ).setMonth(
+            new Date(
+              "2021-12-17T03:24:00"
+            ).getMonth() - 3
+          )
+        ),
+
+        $lte: new Date("2021-12-17T03:24:00"), // fecha actual
+      },
+    },
+  },
+  {
+    $group: {
+      _id: {
+        mes: { $month: "$fechaOrden" },
+        año: { $year: "$fechaOrden" },
+        Suplidor: "$codigoSuplidor",
+      }, // agrupamos por codigo de suplidor, para poder sumar todos los que son iguales
+      nombreSuplidor: {
+        $first: "$nombreSuplidor",
+      },
+      codigoSuplidor: {
+        $first: "$codigoSuplidor",
+      },
+      CantidadCompra: {
+        $sum: 1, // sumamos 1 por cada documento con el mismo id
+      },
+      MontoTotalComprado: {
+        $sum: "$totalFactura", // sumamos el total en factura dentro de cada suplidor
+      },
+    },
+  },
+  {
+    $project: {
+      _id: 0, // ocultamos el id
+      CodigoSuplidor: "$_id.Suplidor",
+      nombreSuplidor: 1,
+      CantidadCompra: 1,
+      MontoTotalComprado: 1,
+    },
+  },
+  {
+    $limit: 5, // limitamos el 5, para presentar solamente 5 documentos
+  },
+  {
+    $sort: {
+      MontoTotalComprado: 1, // ordenamos de menor a mayor
+    },
+  },
+]

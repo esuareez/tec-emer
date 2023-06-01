@@ -1,0 +1,50 @@
+// Ejercicio 3
+[
+  {
+    $lookup: {
+      // Lookup para importar la informacion del otro documento
+      from: "DetalleOrden",
+      localField: "numeroOrden",
+      foreignField: "numeroOrden",
+      as: "detalles",
+    },
+  },
+  {
+    $match: {
+      // match de las ciudades expuestas en el ejercicio
+      ciudadOrden: "SANTIAGO",
+      ciudadDespacho: "LA VEGA",
+    },
+  },
+  { $unwind: "$detalles" }, // deshacemos los arreglos de los detalles
+  {
+    $group: {
+      // agrupamos por producto
+      _id: "$detalles.codigoProducto",
+      NombreProducto: {
+        $first: "$detalles.descripcion",
+      }, // almacenamos el nombre del producto
+      CantidadComprada: {
+        $sum: "$detalles.cantidad",
+      }, // sumamos la cantidad de productos
+      MontoTotalComprado: {
+        $sum: {
+          $multiply: [
+            "$detalles.cantidad",
+            "$detalles.precio",
+          ],
+        },
+      }, // sumamos y multiplicamos la cantidad por el precio
+    },
+  },
+  {
+    $project: {
+      // volver a imprimir los mismos valores, pero con los nombres solicitados por el ejercicio
+      _id: 0,
+      CodigoProducto: "$_id",
+      NombreProducto: 1,
+      CantidadComprada: 1,
+      MontoTotalComprado: 1,
+    },
+  },
+]

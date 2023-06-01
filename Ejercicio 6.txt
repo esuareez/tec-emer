@@ -1,0 +1,64 @@
+// Ejercicio 6
+[
+  {
+    $lookup: {
+      // Importamos los datos de la otra coleccion mediante el detalle orden
+      from: "DetalleOrden",
+      localField: "numeroOrden",
+      foreignField: "numeroOrden",
+      as: "detalles",
+    },
+  },
+  { $unwind: "$detalles" }, // Deshago los arreglos
+  {
+    $match: {
+      "detalles.codigoProducto": {
+        $in: ["P-001", "P-005", "P-008"],
+      }, // matcheo unicamente con uno de los 3 productos
+    },
+  },
+  {
+    $group: {
+      _id: "$numeroOrden", // agrupo por numero de orden todos los productos que esten en la misma orden y luego calculo el descuento
+      CodigoSuplidor: {
+        $first: "$codigoSuplidor",
+      },
+      NombreSuplidor: {
+        $first: "$nombreSuplidor",
+      },
+      MontoTotalDescuento: {
+        $sum: {
+          $multiply: [
+            {
+              $multiply: [
+                {
+                  $divide: [
+                    "$detalles.porcientoDescuento",
+                    100,
+                  ],
+                },
+                "$detalles.precio",
+              ],
+            },
+            "$detalles.cantidad",
+          ],
+        },
+      },
+      // Para el descuento primero calculo el descuento por unidad (porcientoDescuento/100)*precio, luego que obtengo el descuento por unidad lo multiplico por el total de cantidad y luego la sumatoria
+      FechaUltimaCompra: { $max: "$fechaOrden" },
+    },
+  },
+  {
+    $project: {
+      _id: 0,
+    },
+  },
+  {
+    $sort: {
+      MontoTotalDescuento: -1,
+    },
+  },
+  {
+    $limit: 3,
+  },
+]

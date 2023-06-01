@@ -1,0 +1,41 @@
+// Ejercicio 7
+[
+  {
+    $match: {
+      ciudadDespacho: "MOCA",
+    },
+  },
+  {
+    $sort: {
+      fechaOrden: -1,
+    },
+  },
+  {
+    $group: {
+      _id: "$codigoSuplidor",
+      UltimaFechaOrden: {
+        $first: "$fechaOrden",
+      },
+      NombreSuplidor: {
+        $first: "$nombreSuplidor",
+      },
+      CiudadOrigen: {
+        $first: "$ciudadOrden",
+      },
+    },
+  },
+  {
+    $project: {
+      _id: 0,
+      CodigoSuplidor: "$_id",
+      UltimaFechaOrden: 1,
+      NombreSuplidor: 1,
+      CiudadOrigen: 1,
+    },
+  },
+  {
+    $sort: {
+      CodigoSuplidor: 1,
+    },
+  },
+]

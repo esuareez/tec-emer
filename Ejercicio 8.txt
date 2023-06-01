@@ -1,0 +1,32 @@
+// Ejercicio 8
+
+[
+  {
+    $sort: {
+      fechaOrden: -1,
+    },
+  },
+  {
+    $limit: 10,
+  },
+  {
+    $lookup: {
+      from: "DetalleOrden",
+      localField: "numeroOrden",
+      foreignField: "numeroOrden",
+      as: "detalle",
+    },
+  },
+  {
+    $unwind: "$detalle",
+  },
+  {
+    $project: {
+      _id: 0,
+      SuplidorOrdeno: "$nombreSuplidor",
+      FechaOrden: "$fechaOrden",
+      CodigoProducto: "$detalle.codigoProducto",
+      Producto: "$detalle.descripcion",
+    },
+  },
+]

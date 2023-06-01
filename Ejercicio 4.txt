@@ -1,0 +1,69 @@
+// Ejercicio 4
+[
+  {
+    $lookup: {
+      // Lookup para importar la informacion del otro documento
+      from: "DetalleOrden",
+      localField: "numeroOrden",
+      foreignField: "numeroOrden",
+      as: "detalles",
+    },
+  },
+  { $unwind: "$detalles" }, // Para deshacer y solo mostrar los productos filtrados (no era necesario hacerse para obtener la ciudad, pero lo hice para mantener el orden)
+  {
+    $match: {
+      $and: [
+        {
+          fechaOrden: {
+            $gte: ISODate("2019-01-01"),
+            $lte: ISODate("2020-03-15"),
+          },
+        },
+        {
+          // Como tengo dos condiciones y quiero que ambas se cumplan, utilizamos el $and
+          "detalles.codigoProducto": {
+            $in: ["P-001", "P-011", "P-005"],
+          }, // que el codigo sea uno de estos y la fecha esté dentro del rango
+        },
+      ],
+    },
+  },
+  {
+    $group: {
+      _id: {
+        codigoProducto:
+          "$detalles.codigoProducto",
+        ciudadOrden: "$ciudadOrden",
+      },
+      NombreProducto: {
+        $first: "$detalles.descripcion",
+      },
+      CantidadTotalComprada: {
+        $sum: "$detalles.cantidad",
+      },
+      MontoTotalComprado: {
+        $sum: {
+          $multiply: [
+            "$detalles.cantidad",
+            "$detalles.precio",
+          ],
+        },
+      },
+    },
+  },
+  {
+    $project: {
+      _id: 0,
+      CodigoProducto: "$_id.codigoProducto",
+      Ciudad: "$_id.ciudadOrden",
+      NombreProducto: 1,
+      CantidadTotalComprada: 1,
+      MontoTotalComprado: 1,
+    },
+  },
+  {
+    $sort: {
+      Ciudad: -1,
+    },
+  },
+]

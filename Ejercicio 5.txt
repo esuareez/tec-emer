@@ -1,0 +1,21 @@
+// Ejercicio 5
+[
+  {
+    $match: {
+      ciudadDespacho: "SANTO DOMINGO",
+    },
+  },
+  {
+    $project: {
+      _id: 0,
+    },
+  },
+  {
+    $sort: {
+      fechaOrden: 1,
+    },
+  },
+  {
+    $limit: 8,
+  },
+]
