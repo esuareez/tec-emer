@@ -1,0 +1,146 @@
+{
+  explainVersion: '1',
+  queryPlanner: {
+    namespace: 'facturas.facturacion',
+    indexFilterSet: false,
+    parsedQuery: {
+      '$and': [
+        { ciudadDespacho: { '$eq': 'SANTIAGO' } },
+        { ciudadFactura: { '$eq': 'LA VEGA' } }
+      ]
+    },
+    queryHash: '86EE4CAA',
+    planCacheKey: 'ABCCFA56',
+    maxIndexedOrSolutionsReached: false,
+    maxIndexedAndSolutionsReached: false,
+    maxScansToExplodeReached: false,
+    winningPlan: {
+      stage: 'PROJECTION_SIMPLE',
+      transformBy: {
+        codigoFactura: 1,
+        codigoCliente: 1,
+        ciudadFactura: 1,
+        ciudadDespacho: 1,
+        _id: 0
+      },
+      inputStage: {
+        stage: 'FETCH',
+        inputStage: {
+          stage: 'IXSCAN',
+          keyPattern: { ciudadFactura: 1, ciudadDespacho: 1 },
+          indexName: 'ciudadFactura_1_ciudadDespacho_1',
+          isMultiKey: false,
+          multiKeyPaths: { ciudadFactura: [], ciudadDespacho: [] },
+          isUnique: false,
+          isSparse: false,
+          isPartial: false,
+          indexVersion: 2,
+          direction: 'forward',
+          indexBounds: {
+            ciudadFactura: [ '["LA VEGA", "LA VEGA"]' ],
+            ciudadDespacho: [ '["SANTIAGO", "SANTIAGO"]' ]
+          }
+        }
+      }
+    },
+    rejectedPlans: []
+  },
+  executionStats: {
+    executionSuccess: true,
+    nReturned: 10942,
+    executionTimeMillis: 68,
+    totalKeysExamined: 10942,
+    totalDocsExamined: 10942,
+    executionStages: {
+      stage: 'PROJECTION_SIMPLE',
+      nReturned: 10942,
+      executionTimeMillisEstimate: 22,
+      works: 10943,
+      advanced: 10942,
+      needTime: 0,
+      needYield: 0,
+      saveState: 10,
+      restoreState: 10,
+      isEOF: 1,
+      transformBy: {
+        codigoFactura: 1,
+        codigoCliente: 1,
+        ciudadFactura: 1,
+        ciudadDespacho: 1,
+        _id: 0
+      },
+      inputStage: {
+        stage: 'FETCH',
+        nReturned: 10942,
+        executionTimeMillisEstimate: 22,
+        works: 10943,
+        advanced: 10942,
+        needTime: 0,
+        needYield: 0,
+        saveState: 10,
+        restoreState: 10,
+        isEOF: 1,
+        docsExamined: 10942,
+        alreadyHasObj: 0,
+        inputStage: {
+          stage: 'IXSCAN',
+          nReturned: 10942,
+          executionTimeMillisEstimate: 15,
+          works: 10943,
+          advanced: 10942,
+          needTime: 0,
+          needYield: 0,
+          saveState: 10,
+          restoreState: 10,
+          isEOF: 1,
+          keyPattern: { ciudadFactura: 1, ciudadDespacho: 1 },
+          indexName: 'ciudadFactura_1_ciudadDespacho_1',
+          isMultiKey: false,
+          multiKeyPaths: { ciudadFactura: [], ciudadDespacho: [] },
+          isUnique: false,
+          isSparse: false,
+          isPartial: false,
+          indexVersion: 2,
+          direction: 'forward',
+          indexBounds: {
+            ciudadFactura: [ '["LA VEGA", "LA VEGA"]' ],
+            ciudadDespacho: [ '["SANTIAGO", "SANTIAGO"]' ]
+          },
+          keysExamined: 10942,
+          seeks: 1,
+          dupsTested: 0,
+          dupsDropped: 0
+        }
+      }
+    }
+  },
+  command: {
+    find: 'facturacion',
+    filter: { ciudadFactura: 'LA VEGA', ciudadDespacho: 'SANTIAGO' },
+    projection: {
+      codigoFactura: 1,
+      codigoCliente: 1,
+      ciudadFactura: 1,
+      ciudadDespacho: 1,
+      _id: 0
+    },
+    '$db': 'facturas'
+  },
+  serverInfo: {
+    host: 'TIC-00017',
+    port: 27017,
+    version: '6.0.7',
+    gitVersion: '202ad4fda2618c652e35f5981ef2f903d8dd1f1a'
+  },
+  serverParameters: {
+    internalQueryFacetBufferSizeBytes: 104857600,
+    internalQueryFacetMaxOutputDocSizeBytes: 104857600,
+    internalLookupStageIntermediateDocumentMaxSizeBytes: 104857600,
+    internalDocumentSourceGroupMaxMemoryBytes: 104857600,
+    internalQueryMaxBlockingSortMemoryUsageBytes: 104857600,
+    internalQueryProhibitBlockingMergeOnMongoS: 0,
+    internalQueryMaxAddToSetBytes: 104857600,
+    internalDocumentSourceSetWindowFieldsMaxMemoryBytes: 104857600
+  },
+  ok: 1
+}

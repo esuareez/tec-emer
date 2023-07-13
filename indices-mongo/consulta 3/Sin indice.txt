@@ -1,0 +1,114 @@
+{
+  explainVersion: '1',
+  queryPlanner: {
+    namespace: 'facturas.facturacion',
+    indexFilterSet: false,
+    parsedQuery: {
+      '$and': [
+        { ciudadDespacho: { '$eq': 'SANTIAGO' } },
+        { ciudadFactura: { '$eq': 'LA VEGA' } }
+      ]
+    },
+    queryHash: '86EE4CAA',
+    planCacheKey: '86EE4CAA',
+    maxIndexedOrSolutionsReached: false,
+    maxIndexedAndSolutionsReached: false,
+    maxScansToExplodeReached: false,
+    winningPlan: {
+      stage: 'PROJECTION_SIMPLE',
+      transformBy: {
+        codigoFactura: 1,
+        codigoCliente: 1,
+        ciudadFactura: 1,
+        ciudadDespacho: 1,
+        _id: 0
+      },
+      inputStage: {
+        stage: 'COLLSCAN',
+        filter: {
+          '$and': [
+            { ciudadDespacho: { '$eq': 'SANTIAGO' } },
+            { ciudadFactura: { '$eq': 'LA VEGA' } }
+          ]
+        },
+        direction: 'forward'
+      }
+    },
+    rejectedPlans: []
+  },
+  executionStats: {
+    executionSuccess: true,
+    nReturned: 10942,
+    executionTimeMillis: 946,
+    totalKeysExamined: 0,
+    totalDocsExamined: 700000,
+    executionStages: {
+      stage: 'PROJECTION_SIMPLE',
+      nReturned: 10942,
+      executionTimeMillisEstimate: 69,
+      works: 700001,
+      advanced: 10942,
+      needTime: 689058,
+      needYield: 0,
+      saveState: 700,
+      restoreState: 700,
+      isEOF: 1,
+      transformBy: {
+        codigoFactura: 1,
+        codigoCliente: 1,
+        ciudadFactura: 1,
+        ciudadDespacho: 1,
+        _id: 0
+      },
+      inputStage: {
+        stage: 'COLLSCAN',
+        filter: {
+          '$and': [
+            { ciudadDespacho: { '$eq': 'SANTIAGO' } },
+            { ciudadFactura: { '$eq': 'LA VEGA' } }
+          ]
+        },
+        nReturned: 10942,
+        executionTimeMillisEstimate: 67,
+        works: 700001,
+        advanced: 10942,
+        needTime: 689058,
+        needYield: 0,
+        saveState: 700,
+        restoreState: 700,
+        isEOF: 1,
+        direction: 'forward',
+        docsExamined: 700000
+      }
+    }
+  },
+  command: {
+    find: 'facturacion',
+    filter: { ciudadFactura: 'LA VEGA', ciudadDespacho: 'SANTIAGO' },
+    projection: {
+      codigoFactura: 1,
+      codigoCliente: 1,
+      ciudadFactura: 1,
+      ciudadDespacho: 1,
+      _id: 0
+    },
+    '$db': 'facturas'
+  },
+  serverInfo: {
+    host: 'TIC-00017',
+    port: 27017,
+    version: '6.0.7',
+    gitVersion: '202ad4fda2618c652e35f5981ef2f903d8dd1f1a'
+  },
+  serverParameters: {
+    internalQueryFacetBufferSizeBytes: 104857600,
+    internalQueryFacetMaxOutputDocSizeBytes: 104857600,
+    internalLookupStageIntermediateDocumentMaxSizeBytes: 104857600,
+    internalDocumentSourceGroupMaxMemoryBytes: 104857600,
+    internalQueryMaxBlockingSortMemoryUsageBytes: 104857600,
+    internalQueryProhibitBlockingMergeOnMongoS: 0,
+    internalQueryMaxAddToSetBytes: 104857600,
+    internalDocumentSourceSetWindowFieldsMaxMemoryBytes: 104857600
+  },
+  ok: 1
+}
