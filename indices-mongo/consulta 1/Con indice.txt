@@ -1,0 +1,190 @@
+Con indice:
+
+{
+  explainVersion: '1',
+  queryPlanner: {
+    namespace: 'facturas.facturacion',
+    indexFilterSet: false,
+    parsedQuery: {
+      '$and': [
+        {
+          fechaFactura: { '$lt': ISODate("2022-02-01T00:00:00.000Z") }
+        },
+        {
+          fechaFactura: { '$gte': ISODate("2021-01-01T00:00:00.000Z") }
+        }
+      ]
+    },
+    queryHash: '214838C7',
+    planCacheKey: 'B1AEA4F8',
+    optimizedPipeline: true,
+    maxIndexedOrSolutionsReached: false,
+    maxIndexedAndSolutionsReached: false,
+    maxScansToExplodeReached: false,
+    winningPlan: {
+      stage: 'PROJECTION_SIMPLE',
+      transformBy: {
+        ciudadFactura: true,
+        codigoCliente: true,
+        fechaFactura: true,
+        totalFactura: true,
+        _id: false
+      },
+      inputStage: {
+        stage: 'FETCH',
+        inputStage: {
+          stage: 'SORT',
+          sortPattern: { ciudadFactura: -1, fechaFactura: -1 },
+          memLimit: 104857600,
+          type: 'default',
+          inputStage: {
+            stage: 'IXSCAN',
+            keyPattern: { fechaFactura: -1, ciudadFactura: -1 },
+            indexName: 'fechaFactura_-1_ciudadFactura_-1',
+            isMultiKey: false,
+            multiKeyPaths: { fechaFactura: [], ciudadFactura: [] },
+            isUnique: false,
+            isSparse: false,
+            isPartial: false,
+            indexVersion: 2,
+            direction: 'forward',
+            indexBounds: {
+              fechaFactura: [ '(new Date(1643673600000), new Date(1609459200000)]' ],
+              ciudadFactura: [ '[MaxKey, MinKey]' ]
+            }
+          }
+        }
+      }
+    },
+    rejectedPlans: []
+  },
+  executionStats: {
+    executionSuccess: true,
+    nReturned: 379646,
+    executionTimeMillis: 5866,
+    totalKeysExamined: 379646,
+    totalDocsExamined: 379646,
+    executionStages: {
+      stage: 'PROJECTION_SIMPLE',
+      nReturned: 379646,
+      executionTimeMillisEstimate: 2783,
+      works: 759294,
+      advanced: 379646,
+      needTime: 379647,
+      needYield: 0,
+      saveState: 763,
+      restoreState: 763,
+      isEOF: 1,
+      transformBy: {
+        ciudadFactura: true,
+        codigoCliente: true,
+        fechaFactura: true,
+        totalFactura: true,
+        _id: false
+      },
+      inputStage: {
+        stage: 'FETCH',
+        nReturned: 379646,
+        executionTimeMillisEstimate: 2611,
+        works: 759294,
+        advanced: 379646,
+        needTime: 379647,
+        needYield: 0,
+        saveState: 763,
+        restoreState: 763,
+        isEOF: 1,
+        docsExamined: 379646,
+        alreadyHasObj: 0,
+        inputStage: {
+          stage: 'SORT',
+          nReturned: 379646,
+          executionTimeMillisEstimate: 1379,
+          works: 759294,
+          advanced: 379646,
+          needTime: 379647,
+          needYield: 0,
+          saveState: 763,
+          restoreState: 763,
+          isEOF: 1,
+          sortPattern: { ciudadFactura: -1, fechaFactura: -1 },
+          memLimit: 104857600,
+          type: 'default',
+          totalDataSizeSorted: 58878391,
+          usedDisk: false,
+          spills: 0,
+          inputStage: {
+            stage: 'IXSCAN',
+            nReturned: 379646,
+            executionTimeMillisEstimate: 130,
+            works: 379647,
+            advanced: 379646,
+            needTime: 0,
+            needYield: 0,
+            saveState: 763,
+            restoreState: 763,
+            isEOF: 1,
+            keyPattern: { fechaFactura: -1, ciudadFactura: -1 },
+            indexName: 'fechaFactura_-1_ciudadFactura_-1',
+            isMultiKey: false,
+            multiKeyPaths: { fechaFactura: [], ciudadFactura: [] },
+            isUnique: false,
+            isSparse: false,
+            isPartial: false,
+            indexVersion: 2,
+            direction: 'forward',
+            indexBounds: {
+              fechaFactura: [ '(new Date(1643673600000), new Date(1609459200000)]' ],
+              ciudadFactura: [ '[MaxKey, MinKey]' ]
+            },
+            keysExamined: 379646,
+            seeks: 1,
+            dupsTested: 0,
+            dupsDropped: 0
+          }
+        }
+      }
+    }
+  },
+  command: {
+    aggregate: 'facturacion',
+    pipeline: [
+      {
+        '$match': {
+          fechaFactura: {
+            '$gte': ISODate("2021-01-01T00:00:00.000Z"),
+            '$lt': ISODate("2022-02-01T00:00:00.000Z")
+          }
+        }
+      },
+      { '$sort': { ciudadFactura: -1, fechaFactura: -1 } },
+      {
+        '$project': {
+          _id: 0,
+          ciudadFactura: 1,
+          fechaFactura: 1,
+          codigoCliente: 1,
+          totalFactura: 1
+        }
+      }
+    ],
+    cursor: {},
+    '$db': 'facturas'
+  },
+  serverInfo: {
+    host: 'TIC-00017',
+    port: 27017,
+    version: '6.0.7',
+    gitVersion: '202ad4fda2618c652e35f5981ef2f903d8dd1f1a'
+  },
+  serverParameters: {
+    internalQueryFacetBufferSizeBytes: 104857600,
+    internalQueryFacetMaxOutputDocSizeBytes: 104857600,
+    internalLookupStageIntermediateDocumentMaxSizeBytes: 104857600,
+    internalDocumentSourceGroupMaxMemoryBytes: 104857600,
+    internalQueryMaxBlockingSortMemoryUsageBytes: 104857600,
+    internalQueryProhibitBlockingMergeOnMongoS: 0,
+    internalQueryMaxAddToSetBytes: 104857600,
+    internalDocumentSourceSetWindowFieldsMaxMemoryBytes: 104857600
+  },
+  ok: 1
+}

@@ -1,0 +1,164 @@
+{
+  explainVersion: '1',
+  queryPlanner: {
+    namespace: 'facturas.facturacion',
+    indexFilterSet: false,
+    parsedQuery: {
+      '$and': [
+        {
+          fechaFactura: { '$lt': ISODate("2022-02-01T00:00:00.000Z") }
+        },
+        {
+          fechaFactura: { '$gte': ISODate("2021-01-01T00:00:00.000Z") }
+        }
+      ]
+    },
+    queryHash: '214838C7',
+    planCacheKey: '214838C7',
+    optimizedPipeline: true,
+    maxIndexedOrSolutionsReached: false,
+    maxIndexedAndSolutionsReached: false,
+    maxScansToExplodeReached: false,
+    winningPlan: {
+      stage: 'SORT',
+      sortPattern: { ciudadFactura: -1, fechaFactura: -1 },
+      memLimit: 104857600,
+      type: 'simple',
+      inputStage: {
+        stage: 'PROJECTION_SIMPLE',
+        transformBy: {
+          ciudadFactura: true,
+          codigoCliente: true,
+          fechaFactura: true,
+          totalFactura: true,
+          _id: false
+        },
+        inputStage: {
+          stage: 'COLLSCAN',
+          filter: {
+            '$and': [
+              {
+                fechaFactura: { '$lt': ISODate("2022-02-01T00:00:00.000Z") }
+              },
+              {
+                fechaFactura: { '$gte': ISODate("2021-01-01T00:00:00.000Z") }
+              }
+            ]
+          },
+          direction: 'forward'
+        }
+      }
+    },
+    rejectedPlans: []
+  },
+  executionStats: {
+    executionSuccess: true,
+    nReturned: 379646,
+    executionTimeMillis: 4032,
+    totalKeysExamined: 0,
+    totalDocsExamined: 700000,
+    executionStages: {
+      stage: 'SORT',
+      nReturned: 379646,
+      executionTimeMillisEstimate: 1934,
+      works: 1079648,
+      advanced: 379646,
+      needTime: 700001,
+      needYield: 0,
+      saveState: 1083,
+      restoreState: 1083,
+      isEOF: 1,
+      sortPattern: { ciudadFactura: -1, fechaFactura: -1 },
+      memLimit: 104857600,
+      type: 'simple',
+      totalDataSizeSorted: 77552467,
+      usedDisk: false,
+      spills: 0,
+      inputStage: {
+        stage: 'PROJECTION_SIMPLE',
+        nReturned: 379646,
+        executionTimeMillisEstimate: 234,
+        works: 700001,
+        advanced: 379646,
+        needTime: 320354,
+        needYield: 0,
+        saveState: 1083,
+        restoreState: 1083,
+        isEOF: 1,
+        transformBy: {
+          ciudadFactura: true,
+          codigoCliente: true,
+          fechaFactura: true,
+          totalFactura: true,
+          _id: false
+        },
+        inputStage: {
+          stage: 'COLLSCAN',
+          filter: {
+            '$and': [
+              {
+                fechaFactura: { '$lt': ISODate("2022-02-01T00:00:00.000Z") }
+              },
+              {
+                fechaFactura: { '$gte': ISODate("2021-01-01T00:00:00.000Z") }
+              }
+            ]
+          },
+          nReturned: 379646,
+          executionTimeMillisEstimate: 149,
+          works: 700001,
+          advanced: 379646,
+          needTime: 320354,
+          needYield: 0,
+          saveState: 1083,
+          restoreState: 1083,
+          isEOF: 1,
+          direction: 'forward',
+          docsExamined: 700000
+        }
+      }
+    }
+  },
+  command: {
+    aggregate: 'facturacion',
+    pipeline: [
+      {
+        '$match': {
+          fechaFactura: {
+            '$gte': ISODate("2021-01-01T00:00:00.000Z"),
+            '$lt': ISODate("2022-02-01T00:00:00.000Z")
+          }
+        }
+      },
+      { '$sort': { ciudadFactura: -1, fechaFactura: -1 } },
+      {
+        '$project': {
+          _id: 0,
+          ciudadFactura: 1,
+          fechaFactura: 1,
+          codigoCliente: 1,
+          totalFactura: 1
+        }
+      }
+    ],
+    cursor: {},
+    '$db': 'facturas'
+  },
+  serverInfo: {
+    host: 'TIC-00017',
+    port: 27017,
+    version: '6.0.7',
+    gitVersion: '202ad4fda2618c652e35f5981ef2f903d8dd1f1a'
+  },
+  serverParameters: {
+    internalQueryFacetBufferSizeBytes: 104857600,
+    internalQueryFacetMaxOutputDocSizeBytes: 104857600,
+    internalLookupStageIntermediateDocumentMaxSizeBytes: 104857600,
+    internalDocumentSourceGroupMaxMemoryBytes: 104857600,
+    internalQueryMaxBlockingSortMemoryUsageBytes: 104857600,
+    internalQueryProhibitBlockingMergeOnMongoS: 0,
+    internalQueryMaxAddToSetBytes: 104857600,
+    internalDocumentSourceSetWindowFieldsMaxMemoryBytes: 104857600
+  },
+  ok: 1
+}
