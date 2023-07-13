@@ -1,0 +1,197 @@
+{
+  explainVersion: '1',
+  stages: [
+    {
+      '$cursor': {
+        queryPlanner: {
+          namespace: 'facturas.facturacion',
+          indexFilterSet: false,
+          parsedQuery: {
+            '$and': [
+              {
+                fechaFactura: { '$lte': ISODate("2022-08-31T00:00:00.000Z") }
+              },
+              {
+                fechaFactura: { '$gte': ISODate("2021-05-01T00:00:00.000Z") }
+              },
+              {
+                codigoCliente: { '$in': [ '1001', '1002', '1003', '1004' ] }
+              }
+            ]
+          },
+          queryHash: '3F4932BF',
+          planCacheKey: '3F4932BF',
+          maxIndexedOrSolutionsReached: false,
+          maxIndexedAndSolutionsReached: false,
+          maxScansToExplodeReached: false,
+          winningPlan: {
+            stage: 'PROJECTION_SIMPLE',
+            transformBy: { articulos: 1, ciudadFactura: 1, _id: 0 },
+            inputStage: {
+              stage: 'COLLSCAN',
+              filter: {
+                '$and': [
+                  {
+                    fechaFactura: { '$lte': ISODate("2022-08-31T00:00:00.000Z") }
+                  },
+                  {
+                    fechaFactura: { '$gte': ISODate("2021-05-01T00:00:00.000Z") }
+                  },
+                  {
+                    codigoCliente: { '$in': [ '1001', '1002', '1003', '1004' ] }
+                  }
+                ]
+              },
+              direction: 'forward'
+            }
+          },
+          rejectedPlans: []
+        },
+        executionStats: {
+          executionSuccess: true,
+          nReturned: 0,
+          executionTimeMillis: 1387,
+          totalKeysExamined: 0,
+          totalDocsExamined: 700000,
+          executionStages: {
+            stage: 'PROJECTION_SIMPLE',
+            nReturned: 0,
+            executionTimeMillisEstimate: 148,
+            works: 700001,
+            advanced: 0,
+            needTime: 700000,
+            needYield: 0,
+            saveState: 701,
+            restoreState: 701,
+            isEOF: 1,
+            transformBy: { articulos: 1, ciudadFactura: 1, _id: 0 },
+            inputStage: {
+              stage: 'COLLSCAN',
+              filter: {
+                '$and': [
+                  {
+                    fechaFactura: { '$lte': ISODate("2022-08-31T00:00:00.000Z") }
+                  },
+                  {
+                    fechaFactura: { '$gte': ISODate("2021-05-01T00:00:00.000Z") }
+                  },
+                  {
+                    codigoCliente: { '$in': [ '1001', '1002', '1003', '1004' ] }
+                  }
+                ]
+              },
+              nReturned: 0,
+              executionTimeMillisEstimate: 146,
+              works: 700001,
+              advanced: 0,
+              needTime: 700000,
+              needYield: 0,
+              saveState: 701,
+              restoreState: 701,
+              isEOF: 1,
+              direction: 'forward',
+              docsExamined: 700000
+            }
+          }
+        }
+      },
+      nReturned: Long("0"),
+      executionTimeMillisEstimate: Long("1387")
+    },
+    {
+      '$unwind': { path: '$articulos' },
+      nReturned: Long("0"),
+      executionTimeMillisEstimate: Long("1387")
+    },
+    {
+      '$group': {
+        _id: {
+          ciudadFactura: '$ciudadFactura',
+          codigoProducto: '$articulos.codigoProducto'
+        },
+        MontoTotalProducto: {
+          '$sum': {
+            '$multiply': [
+              '$articulos.precioVenta',
+              '$articulos.cantidadFacturada'
+            ]
+          }
+        }
+      },
+      maxAccumulatorMemoryUsageBytes: { MontoTotalProducto: Long("0") },
+      totalOutputDataSizeBytes: Long("0"),
+      usedDisk: false,
+      spills: Long("0"),
+      nReturned: Long("0"),
+      executionTimeMillisEstimate: Long("1387")
+    },
+    {
+      '$project': {
+        MontoTotalProducto: true,
+        Ciudad: '$_id.ciudadFactura',
+        Producto: '$_id.codigoProducto',
+        _id: false
+      },
+      nReturned: Long("0"),
+      executionTimeMillisEstimate: Long("1387")
+    }
+  ],
+  serverInfo: {
+    host: 'TIC-00017',
+    port: 27017,
+    version: '6.0.7',
+    gitVersion: '202ad4fda2618c652e35f5981ef2f903d8dd1f1a'
+  },
+  serverParameters: {
+    internalQueryFacetBufferSizeBytes: 104857600,
+    internalQueryFacetMaxOutputDocSizeBytes: 104857600,
+    internalLookupStageIntermediateDocumentMaxSizeBytes: 104857600,
+    internalDocumentSourceGroupMaxMemoryBytes: 104857600,
+    internalQueryMaxBlockingSortMemoryUsageBytes: 104857600,
+    internalQueryProhibitBlockingMergeOnMongoS: 0,
+    internalQueryMaxAddToSetBytes: 104857600,
+    internalDocumentSourceSetWindowFieldsMaxMemoryBytes: 104857600
+  },
+  command: {
+    aggregate: 'facturacion',
+    pipeline: [
+      {
+        '$match': {
+          fechaFactura: {
+            '$gte': ISODate("2021-05-01T00:00:00.000Z"),
+            '$lte': ISODate("2022-08-31T00:00:00.000Z")
+          },
+          codigoCliente: { '$in': [ '1001', '1002', '1003', '1004' ] }
+        }
+      },
+      { '$unwind': '$articulos' },
+      {
+        '$group': {
+          _id: {
+            ciudadFactura: '$ciudadFactura',
+            codigoProducto: '$articulos.codigoProducto'
+          },
+          MontoTotalProducto: {
+            '$sum': {
+              '$multiply': [
+                '$articulos.precioVenta',
+                '$articulos.cantidadFacturada'
+              ]
+            }
+          }
+        }
+      },
+      {
+        '$project': {
+          _id: 0,
+          Ciudad: '$_id.ciudadFactura',
+          Producto: '$_id.codigoProducto',
+          MontoTotalProducto: 1
+        }
+      }
+    ],
+    cursor: {},
+    '$db': 'facturas'
+  },
+  ok: 1
+}
